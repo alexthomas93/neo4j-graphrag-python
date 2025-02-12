@@ -24,7 +24,7 @@ from neo4j_graphrag.indexes import (
     create_fulltext_index,
     create_vector_index,
     drop_index_if_exists,
-    upsert_embeddings,
+    upsert_vectors,
     upsert_vector,
     upsert_vector_on_relationship,
 )
@@ -337,9 +337,9 @@ def test_escaping_lucene() -> None:
     )
 
 
-def test_upsert_embeddings_wrong_entity_type(driver: MagicMock) -> None:
+def test_upsert_vectors_wrong_entity_type(driver: MagicMock) -> None:
     with pytest.raises(ValueError) as exc_info:
-        upsert_embeddings(
+        upsert_vectors(
             driver=driver,
             ids=["1"],
             embedding_property="embedding",
@@ -350,9 +350,9 @@ def test_upsert_embeddings_wrong_entity_type(driver: MagicMock) -> None:
     assert str(exc_info.value) == "entity_type must be either 'NODE' or 'RELATIONSHIP'"
 
 
-def test_upsert_embeddings_mismatched_ids_and_embeddings(driver: MagicMock) -> None:
+def test_upsert_vectors_mismatched_ids_and_embeddings(driver: MagicMock) -> None:
     with pytest.raises(ValueError) as exc_info:
-        upsert_embeddings(
+        upsert_vectors(
             driver=driver,
             ids=["1"],
             embedding_property="embedding",
@@ -362,9 +362,9 @@ def test_upsert_embeddings_mismatched_ids_and_embeddings(driver: MagicMock) -> N
     assert str(exc_info.value) == "ids and embeddings must be the same length"
 
 
-def test_upsert_embeddings_inconsistent_embedding_sizes(driver: MagicMock) -> None:
+def test_upsert_vectors_inconsistent_embedding_sizes(driver: MagicMock) -> None:
     with pytest.raises(ValueError) as exc_info:
-        upsert_embeddings(
+        upsert_vectors(
             driver=driver,
             ids=["1", "2"],
             embedding_property="embedding",
